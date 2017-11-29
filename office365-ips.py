@@ -12,6 +12,10 @@ TODO:
   * Implement more thorough input validation
   * Implement error checking
   * Implement access via web proxy
+
+Revision control:
+  * 0.1 - Initial version
+  * 0.2 - Minor output formatting changes
 """
 
 import os
@@ -73,7 +77,9 @@ else:
   print('info: updating...')
 
 config = open(asa_fname, 'w')
+config.write('!'+NEWLINE)
 config.write('! Last updated: '+updated+NEWLINE)
+config.write('!'+NEWLINE)
 
 for service in root:
   service_attribs = service.attrib
@@ -94,6 +100,9 @@ for service in root:
           obj_list = []
           host_count = 1
           net_count = 1
+          config.write('!'+NEWLINE)
+          config.write('! Generating objects for '+service_name+NEWLINE)
+          config.write('!'+NEWLINE)
           for addr in addr_list.iter('address'):
             cidr_ip_addr = addr.text
             #print('debug: cidr_ip_addr='+cidr_ip_addr)
@@ -107,6 +116,7 @@ for service in root:
               net_count = net_count + 1
             #print('debug: object network '+str.lower(obj_name))
             #print('debug:   subnet '+str(ip.network)+' '+str(ip.netmask))
+            config.write('!'+NEWLINE)
             config.write('! '+cidr_ip_addr+NEWLINE)
             config.write('object network '+str.lower(obj_name)+NEWLINE)
             config.write('  subnet '+str(ip.network)+' '+str(ip.netmask)+NEWLINE)
@@ -114,7 +124,10 @@ for service in root:
 
           group_name = str.upper(group_prefix+service_name)
           #print('debug: object-group network '+group_name)
-          config.write(NEWLINE+NEWLINE+'! '+service_name+NEWLINE)
+          config.write('!'+NEWLINE)
+          config.write('!'+NEWLINE)
+          config.write('! Generating group for '+service_name+NEWLINE)
+          config.write('!'+NEWLINE)
           config.write('object-group network '+group_name+NEWLINE)
           for obj in obj_list:
             #print('debug:   network-object object '+obj)
