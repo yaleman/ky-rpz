@@ -74,7 +74,7 @@ echo "zone \"rpz.blacklist\" { type master; file \"$ZONEDBFILE\"; };" | sudo tee
 # copy files to bind9 location
 echo "[+] Copying blacklist zonefile"
 #sudo mv -u $OUTPUTDIR/$BLACKLISTFILE $ZONEFILEDIR/$BLACKLISTFILE
-        cat ./templates/rpz.blacklist.zone $OUTPUTDIR/$DBFILE | sudo tee $ZONEFILEDIR/$DBFILE
+        cat "./templates/db.ky-rpz" "$OUTPUTDIR/$DBFILE" | sudo tee $ZONEFILEDIR/$DBFILE
 
 # cleanup
 echo "[+] Cleaning up temp files"
