@@ -1,10 +1,11 @@
 #!/bin/bash
 
-TEMPDIR="./tmp"
-OUTPUTDIR="./output"
-ZONEFILEDIR="/var/named/chroot/var/named/"
-ZONEDBFILE="/var/named/named.blacklisted.zone.db"
-SQUIDBLACKLIST="/etc/squid/blocked_sites.txt"
+if [ ! -f "dns-blacklist.config" ]; then
+        echo "Couldn't find config file (dns-blacklist.config)"
+        exit 
+else
+        source "./dns-blacklist.config"
+fi
 # main script
 
 # check variables in case of user
