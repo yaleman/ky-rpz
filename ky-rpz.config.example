@@ -4,7 +4,7 @@ OUTPUTDIR="./output"
 
 ZONEFILEDIR="/etc/bind/"
 
-BLACKLISTFILE="named.conf.ky-rpz"
-BLACKLISTDBFILE="db.ky-rpz"
+NAMEDCONFIG="named.conf.ky-rpz"
+DBFILE="db.ky-rpz"
 
 SQUIDBLACKLIST="/etc/squid/ky-rpz.acl"
