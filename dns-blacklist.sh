@@ -1,64 +1,80 @@
 #!/bin/bash
 
+TEMPDIR="./tmp"
+OUTPUTDIR="./output"
+ZONEFILEDIR="/var/named/chroot/var/named/"
+ZONEDBFILE="/var/named/named.blacklisted.zone.db"
+SQUIDBLACKLIST="/etc/squid/blocked_sites.txt"
+# main script
+
+# check variables in case of user
+if [ -z "$TEMPDIR" ]; then
+        echo "Tempdir not set or is empty, quitting."
+        exit
+fi
+if [ -z "$OUTPUTDIR" ]; then
+        echo "Outputdir not set or is empty, quitting."
+        exit
+fi
+if [ -d "$ZONEFILEDIR" ]; then
+        echo "Zone file dir ($ZONEFILEDIR) doesn't exist, quitting"
+        exit
+fi
+
+ZONEDBFILE=$(echo "$ZONEDBFILE" | sed "s#\/#\\\/#g")
+
+# make sure base directories are here
+echo "[+] ensuring base dirs are in place"
+mkdir -p $TEMPDIR
+mkdir -p $OUTPUTDIR
+
 # cleanup
-echo "[+] Cleaning up in case of failed run"
-rm -f /tmp/blacklisted.zones
-rm -f /tmp/blacklist.txt
-rm -f /tmp/ads-list.txt
-rm -f /tmp/mal-list.txt
-rm -f /tmp/ran-list.txt
+if [ -d $TEMPDIR ]; then
+        echo "[+] Cleaning up in case of failed run"
+        # check if any files in the temp dir and delete them if so
+        files=$(shopt -s nullglob dotglob; echo $TEMPDIR/*)
+        if (( ${#files} ))
+        then
+                echo "[-] deleting tmpdir files"
+                rm $TEMPDIR/*
+        fi
+else
+        echo "Just tried to make a temp dir and it doesn't exist, quitting."
+        exit
+fi
 
 # get list of domains from different sources
 echo "[+] Getting list of domains to blacklist"
-wget -O /tmp/ads-list.txt 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=;showintro=0&&mimetype=plaintext'
-wget -O /tmp/mal-list.txt 'http://mirror1.malwaredomains.com/files/justdomains'
-wget -O /tmp/ran-list.txt 'http://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt'
+wget -O "$TEMPDIR/ads-list.list" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=;showintro=0&&mimetype=plaintext'
+wget -O "$TEMPDIR/mal-list.list" 'http://mirror1.malwaredomains.com/files/justdomains'
+wget -O "$TEMPDIR/ran-list.list" 'http://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt'
 
 # compile into single unique list
 echo "[+] Cleaning up domains"
-sed -e '/^$/d' -e '/^\#/d' -e 's/[^\s]*\s//' -i /tmp/ads-list.txt
-sed -e '/^$/d' -e '/^\#/d' -i /tmp/mal-list.txt
-sed -e '/^$/d' -e '/^\#/d' -i /tmp/ran-list.txt
-cat /tmp/ads-list.txt /tmp/mal-list.txt /tmp/ran-list.txt | sort | uniq > /tmp/blacklist.txt
+# strip empty lines and commented lines from the lists
+sed -e '/^$/d' -e '/^\#/d' -e 's/[^\s]*\s//' -i $TEMPDIR/*.list
+# grab a unique, sorted list of all the .list files' contents
+sort -u $TEMPDIR/*.list > $TEMPDIR/blacklist.txt
 
 # supply the list of domain to squid as well
-yes | rm -f /etc/squid/blocked_sites.txt
-yes | cp -f /tmp/blacklist.txt /etc/squid/blocked_sites.txt
+#echo "[+] Updating squid blocklist with sudo"
+#sudo cp -f "$TEMPDIR/blacklist.txt" $SQUIDBLACKLIST
 
 # zone "$DOMAIN" { type master; file "/var/named/named.blocked.zone.db"; };
 echo "[+] Creating blacklisted config"
-while read domain
-do
-        printf "zone \"%s\" { type master; file \"/var/named/named.blacklisted.zone.db\"; };\n" $domain >> /tmp/blacklisted.zones
-done < /tmp/blacklist.txt
+sed "s/\(.*\)/zone \"\1\" { type master; file \"$ZONEDBFILE\"\; }\;/" "$TEMPDIR/blacklist.txt" > "$OUTPUTDIR/blacklisted.zones"
 
 # cleanup
-echo "[+] Cleaning up temp files"
-rm -f /tmp/ads-list.txt
-rm -f /tmp/mal-list.txt
-rm -f /tmp/ran-list.txt
-rm -f /tmp/blacklist.txt
+#echo "[+] Cleaning up temp files"
+#rm $TEMPDIR/*.list
+#rm $TEMPDIR/blacklist.txt
 
-#vi /var/named/chroot/var/named/named.blocked.zone.db
-#$TTL    86400   ; one day
-#@       IN      SOA     ns.local. hostmaster.ns.local.
-#(
-#               2014090101 ; serial
-#                    28800 ; refresh
-#                     7200 ; retry
-#                   864000 ; expire
-#                    86400 ; ttl
-#)
-#               NS      ns
-#               A       127.0.0.1
-#@      IN      A       127.0.0.1
-#*      IN      A       127.0.0.1
-#               AAAA    ::1
-#*      IN      AAAA    ::1
+#echo "[+] Ensuring blocked zone file is in place with sudo"
+#sudo cp ./templates/named.blocked.zone.db $ZONEFILEDIR
 
 # copy files to bind9 location
-echo "[+] Copying created blacklist config"
-yes | rm -f /var/named/chroot/etc/named.blacklisted.zones
-yes | mv /tmp/blacklisted.zones /var/named/chroot/etc/named.blacklisted.zones
+#echo "[+] Copying created blacklist config"
+#yes | rm -f /var/named/chroot/etc/named.blacklisted.zones
+#yes | mv $TEMPDIR/blacklisted.zones /var/named/chroot/etc/named.blacklisted.zones
 
 echo Done!
