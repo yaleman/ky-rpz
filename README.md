@@ -6,13 +6,13 @@ A slick and DIY RPZ for people who want to roll their own.
 
 An example configuration file is in `ky-rpz.config.example`. Copy this to `ky-rpz.config` and update the paths.
 
-| Variable | Usage |
-| --- | --- |
-| TEMPDIR | Temporary working dir, we suggest "/tmp" |
-| OUTPUTDIR | Place where files are put after processing |
-| ZONEFILEDIR | Where your zone files live |
-| BLACKLISTZONEFILE | The name of the zone file (in case of collisions) |
-| SQUIDBLACKLIST | The location of a squid blacklist. If you don't use squid, just set it to /dev/null |
+| Variable | Usage | Default
+| --- | --- | --- |
+| TEMPDIR | Temporary working dir, we suggest "/tmp" | `./tmp` |
+| OUTPUTDIR | Place where files are put after processing | `./output` |
+| ZONEFILEDIR | Where your zone files live | `/etc/bind/` |
+| BLACKLISTZONEFILE | The name of the zone file (in case of collisions) | `named.conf.ky-rpz`
+| SQUIDBLACKLIST | The location of a squid blacklist. If you don't use squid, just set it to /dev/null | `/etc/squid/ky-rpz.acl` |
 
 Make sure you add the blacklist zone file to your config. For example, I added `include "/etc/bind/named.conf.ky-rpz";` to `/etc/bind/named.conf.local` on a Debian machine.
 
