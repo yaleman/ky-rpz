@@ -57,7 +57,7 @@ sort -u $TEMPDIR/*.list > $TEMPDIR/$BLACKLISTZONEFILE
 
 # supply the list of domain to squid as well
 echo "[+] Updating squid blocklist with sudo"
-sudo cp -f "$TEMPDIR/blacklist.txt" $SQUIDBLACKLIST
+sudo cp -f "$TEMPDIR/$BLACKLISTZONEFILE" $SQUIDBLACKLIST
 
 echo "[+] Creating blacklist zone file"
 # escape forward slashes to use in sed
