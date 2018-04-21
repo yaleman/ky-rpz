@@ -55,3 +55,9 @@ http_access deny all
 # References
 
 * https://dnsrpz.info/
+
+# Thanks to
+
+* http://www.malwaredomains.com/
+* https://pgl.yoyo.org/as/#about
+* https://abuse.ch
