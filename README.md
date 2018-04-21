@@ -10,8 +10,8 @@ An example configuration file is in `dns-blacklist.config.example`. Copy this to
 | --- | --- |
 | TEMPDIR | Temporary working dir, we suggest "/tmp" |
 | OUTPUTDIR | Place where files are put after processing |
-| ZONEFILEDIR | |
-| ZONEDBFILE | Where the bind zone files go |
+| ZONEFILEDIR | Where your zone files live |
+| BLACKLISTZONEFILE | The name of the zone file (in case of collisions) |
 | SQUIDBLACKLIST | The location of a squid blacklist. If you don't use squid, just set it to /dev/null |
 
 # TODO

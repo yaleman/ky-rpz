@@ -1,5 +1,9 @@
 TEMPDIR="./tmp"
+
 OUTPUTDIR="./output"
-ZONEFILEDIR="/var/named/chroot/var/named/"
-ZONEDBFILE="/var/named/named.blacklisted.zone.db"
+
+ZONEFILEDIR="/etc/bind/"
+
+BLACKLISTZONEFILE="db.ky-rpz"
+
 SQUIDBLACKLIST="/etc/squid/blocked_sites.txt"

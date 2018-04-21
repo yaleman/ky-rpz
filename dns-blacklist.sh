@@ -53,30 +53,32 @@ echo "[+] Cleaning up domains"
 # strip empty lines and commented lines from the lists
 sed -e '/^$/d' -e '/^\#/d' -e 's/[^\s]*\s//' -i $TEMPDIR/*.list
 # grab a unique, sorted list of all the .list files' contents
-sort -u $TEMPDIR/*.list > $TEMPDIR/blacklist.txt
+sort -u $TEMPDIR/*.list > $TEMPDIR/$BLACKLISTZONEFILE
 
 # supply the list of domain to squid as well
 #echo "[+] Updating squid blocklist with sudo"
 #sudo cp -f "$TEMPDIR/blacklist.txt" $SQUIDBLACKLIST
 
-echo "[+] Creating blacklisted config"
+echo "[+] Creating blacklist zone file"
 # escape forward slashes to use in sed
-ZONEDBFILE=$(echo "$ZONEDBFILE" | sed "s#\/#\\\/#g")
+ZONEDBFILE=$(echo "$ZONEFILEDIR/blocked.zone" | sed "s#\/#\\\/#g")
 # make the zone file
 # zone "$DOMAIN" { type master; file "/var/named/named.blocked.zone.db"; };
-sed "s/\(.*\)/zone \"\1\" { type master; file \"$ZONEDBFILE\"\; }\;/" "$TEMPDIR/blacklist.txt" > "$OUTPUTDIR/blacklisted.zones"
+sed "s/\(.*\)/zone \"\1\" { type master; file \"$ZONEDBFILE\"\; }\;/" "$TEMPDIR/$BLACKLISTZONEFILE" > "$OUTPUTDIR/$BLACKLISTZONEFILE"
 
-# cleanup
-#echo "[+] Cleaning up temp files"
-#rm $TEMPDIR/*.list
-#rm $TEMPDIR/blacklist.txt
 
-#echo "[+] Ensuring blocked zone file is in place with sudo"
-#sudo cp ./templates/named.blocked.zone.db $ZONEFILEDIR
+echo "[+] Copying template zone file with sudo"
+sudo cp "./templates/blocked.zone" "$ZONEFILEDIR"
 
 # copy files to bind9 location
-#echo "[+] Copying created blacklist config"
-#yes | rm -f /var/named/chroot/etc/named.blacklisted.zones
-#yes | mv $TEMPDIR/blacklisted.zones /var/named/chroot/etc/named.blacklisted.zones
+echo "[+] Copying blacklist zonefile"
+sudo mv -u $OUTPUTDIR/$BLACKLISTZONEFILE $ZONEFILEDIR/$BLACKLISTZONEFILE
+
+echo "[+] Reloading bind9"
+sudo service bind9 reload
+
+# cleanup
+echo "[+] Cleaning up temp files"
+rm $TEMPDIR/*
 
 echo Done!
