@@ -44,10 +44,16 @@ fi
 
 # get list of domains from different sources
 echo "[+] Getting list of domains to blacklist"
-#wget -nv -O "$TEMPDIR/ads-list.list" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=;showintro=0&&mimetype=plaintext'
+
+#TODO: parse this: https://urlhaus.abuse.ch/downloads/rpz/
+
 wget -nv -O "$TEMPDIR/yoyo.list" "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
+
 wget -nv -O "$TEMPDIR/mal-list.list" 'http://mirror1.malwaredomains.com/files/justdomains'
-wget -nv -O "$TEMPDIR/ran-list.list" 'http://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt'
+
+wget -nv -O "$TEMPDIR/abusech-ransomware-list.list" 'http://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt'
+wget -nv -O "$TEMPDIR/abusech-zeus-list.list" 'https://zeustracker.abuse.ch/blocklist.php?download=baddomains'
+
 wget -nv -O "$TEMPDIR/webminer.list" 'https://raw.githubusercontent.com/greatis/Anti-WebMiner/master/blacklist.txt'
 
 # compile into single unique list
