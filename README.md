@@ -4,7 +4,7 @@ A slick and DIY RPZ for people who want to roll their own.
 
 ## BIND Configuration
 
-An example configuration file is in `dns-blacklist.config.example`. Copy this to `dns-blacklist.config` and update the paths.
+An example configuration file is in `ky-rpz.config.example`. Copy this to `ky-rpz.config` and update the paths.
 
 | Variable | Usage |
 | --- | --- |

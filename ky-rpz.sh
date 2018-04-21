@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [ ! -f "dns-blacklist.config" ]; then
-        echo "Couldn't find config file (dns-blacklist.config)"
+if [ ! -f "ky-rpz.config" ]; then
+        echo "Couldn't find config file (ky-rpz.config)"
         exit 
 else
-        source "./dns-blacklist.config"
+        source "./ky-rpz.config"
 fi
 # main script
 
@@ -73,9 +73,6 @@ sudo cp "./templates/blocked.zone" "$ZONEFILEDIR"
 # copy files to bind9 location
 echo "[+] Copying blacklist zonefile"
 sudo mv -u $OUTPUTDIR/$BLACKLISTZONEFILE $ZONEFILEDIR/$BLACKLISTZONEFILE
-
-echo "[+] Reloading bind9"
-sudo service bind9 reload
 
 # cleanup
 echo "[+] Cleaning up temp files"
