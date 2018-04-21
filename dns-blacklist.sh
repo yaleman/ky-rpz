@@ -21,14 +21,12 @@ if [ -d "$ZONEFILEDIR" ]; then
         exit
 fi
 
-ZONEDBFILE=$(echo "$ZONEDBFILE" | sed "s#\/#\\\/#g")
-
 # make sure base directories are here
 echo "[+] ensuring base dirs are in place"
 mkdir -p $TEMPDIR
 mkdir -p $OUTPUTDIR
 
-# cleanup
+# cleanup old files
 if [ -d $TEMPDIR ]; then
         echo "[+] Cleaning up in case of failed run"
         # check if any files in the temp dir and delete them if so
@@ -60,8 +58,11 @@ sort -u $TEMPDIR/*.list > $TEMPDIR/blacklist.txt
 #echo "[+] Updating squid blocklist with sudo"
 #sudo cp -f "$TEMPDIR/blacklist.txt" $SQUIDBLACKLIST
 
-# zone "$DOMAIN" { type master; file "/var/named/named.blocked.zone.db"; };
 echo "[+] Creating blacklisted config"
+# escape forward slashes to use in sed
+ZONEDBFILE=$(echo "$ZONEDBFILE" | sed "s#\/#\\\/#g")
+# make the zone file
+# zone "$DOMAIN" { type master; file "/var/named/named.blocked.zone.db"; };
 sed "s/\(.*\)/zone \"\1\" { type master; file \"$ZONEDBFILE\"\; }\;/" "$TEMPDIR/blacklist.txt" > "$OUTPUTDIR/blacklisted.zones"
 
 # cleanup
