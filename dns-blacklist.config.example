@@ -4,6 +4,6 @@ OUTPUTDIR="./output"
 
 ZONEFILEDIR="/etc/bind/"
 
-BLACKLISTZONEFILE="db.ky-rpz"
+BLACKLISTZONEFILE="named.conf.ky-rpz"
 
 SQUIDBLACKLIST="/etc/squid/blocked_sites.txt"
