@@ -17,7 +17,7 @@ if [ -z "$OUTPUTDIR" ]; then
         echo "Outputdir not set or is empty, quitting."
         exit
 fi
-if [ -d "$ZONEFILEDIR" ]; then
+if [ ! -d "$ZONEFILEDIR" ]; then
         echo "Zone file dir ($ZONEFILEDIR) doesn't exist, quitting"
         exit
 fi
