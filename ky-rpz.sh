@@ -47,11 +47,12 @@ echo "[+] Getting list of domains to blacklist"
 wget -O "$TEMPDIR/ads-list.list" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=;showintro=0&&mimetype=plaintext'
 wget -O "$TEMPDIR/mal-list.list" 'http://mirror1.malwaredomains.com/files/justdomains'
 wget -O "$TEMPDIR/ran-list.list" 'http://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt'
+wget -O "$TEMPDIR/webminer.list" 'https://raw.githubusercontent.com/greatis/Anti-WebMiner/master/blacklist.txt'
 
 # compile into single unique list
 echo "[+] Cleaning up domains"
 # strip empty lines and commented lines from the lists
-sed -e '/^$/d' -e '/^\#/d' -e 's/[^\s]*\s//' -i $TEMPDIR/*.list
+sed -e '/^$/d' -e '/^\[/d' -e '/^\#/d' -e 's/[^\s]*\s//' -i $TEMPDIR/*.list
 # grab a unique, sorted list of all the .list files' contents
 sort -u $TEMPDIR/*.list > $TEMPDIR/$DBFILE
 
