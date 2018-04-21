@@ -2,17 +2,26 @@
 
 A slick and DIY RPZ for people who want to roll their own.
 
-## BIND Configuration
+This'll make the necessary config and zone file to make an `rpz.blacklist` Response Policy Zone configuration on modern BIND implementations.
+
+## Script config
 
 An example configuration file is in `ky-rpz.config.example`. Copy this to `ky-rpz.config` and update the paths.
+
 
 | Variable | Usage | Default
 | --- | --- | --- |
 | TEMPDIR | Temporary working dir, we suggest "/tmp" | `./tmp` |
 | OUTPUTDIR | Place where files are put after processing | `./output` |
 | ZONEFILEDIR | Where your zone files live | `/etc/bind/` |
-| BLACKLISTZONEFILE | The name of the zone file (in case of collisions) | `named.conf.ky-rpz`
-| SQUIDBLACKLIST | The location of a squid blacklist. If you don't use squid, just set it to /dev/null | `/etc/squid/ky-rpz.acl` |
+| NAMEDCONFIG | The named.config filename you want to use (and add to BIND config) | `named.conf.ky-rpz` |
+| DBFILE | The name of the zone file (in case of collisions) | `db.ky-rpz`
+| SQUIDBLACKLIST | The location of a squid blacklist. If you don't use squid, set it to /dev/null | `/etc/squid/ky-rpz.acl` |
+
+
+## BIND Configuration
+
+You'll need to enable the `response-policy` option in BIND. This requires version 9.9 and above. Add this line to `/etc/bind/named.conf.options` inside the existing squiggly braces: `response-policy { zone "rpz.blacklist"; };`
 
 Make sure you add the blacklist zone file to your config. For example, I added `include "/etc/bind/named.conf.ky-rpz";` to `/etc/bind/named.conf.local` on a Debian machine.
 
@@ -42,3 +51,7 @@ http_access deny all
 * Test in production
 * Support a variable for "only leave these in the output dir"
 * Make the caching better
+
+# References
+
+* https://dnsrpz.info/
