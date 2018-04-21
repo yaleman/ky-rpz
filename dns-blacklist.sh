@@ -56,8 +56,8 @@ sed -e '/^$/d' -e '/^\#/d' -e 's/[^\s]*\s//' -i $TEMPDIR/*.list
 sort -u $TEMPDIR/*.list > $TEMPDIR/$BLACKLISTZONEFILE
 
 # supply the list of domain to squid as well
-#echo "[+] Updating squid blocklist with sudo"
-#sudo cp -f "$TEMPDIR/blacklist.txt" $SQUIDBLACKLIST
+echo "[+] Updating squid blocklist with sudo"
+sudo cp -f "$TEMPDIR/blacklist.txt" $SQUIDBLACKLIST
 
 echo "[+] Creating blacklist zone file"
 # escape forward slashes to use in sed

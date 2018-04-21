@@ -6,4 +6,4 @@ ZONEFILEDIR="/etc/bind/"
 
 BLACKLISTZONEFILE="named.conf.ky-rpz"
 
-SQUIDBLACKLIST="/etc/squid/blocked_sites.txt"
+SQUIDBLACKLIST="/etc/squid/ky-rpz.acl"
