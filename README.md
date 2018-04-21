@@ -26,7 +26,7 @@ Below is a section of the default configuration file from Ubuntu's squid package
 # INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
 #
 acl kyrpz dstdomain "/etc/squid/ky-rpz.acl"
-http_access deny bad_url
+http_access deny kyrpz
 
 # Example rule allowing access from your local networks.
 # Adapt localnet in the ACL section to list your (internal) IP networks
