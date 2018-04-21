@@ -53,26 +53,28 @@ echo "[+] Cleaning up domains"
 # strip empty lines and commented lines from the lists
 sed -e '/^$/d' -e '/^\#/d' -e 's/[^\s]*\s//' -i $TEMPDIR/*.list
 # grab a unique, sorted list of all the .list files' contents
-sort -u $TEMPDIR/*.list > $TEMPDIR/$BLACKLISTZONEFILE
+sort -u $TEMPDIR/*.list > $TEMPDIR/$BLACKLISTFILE
 
 # supply the list of domain to squid as well
 echo "[+] Updating squid blocklist with sudo"
-sudo cp -f "$TEMPDIR/$BLACKLISTZONEFILE" $SQUIDBLACKLIST
+sudo cp -f "$TEMPDIR/$BLACKLISTFILE" $SQUIDBLACKLIST
 
 echo "[+] Creating blacklist zone file"
 # escape forward slashes to use in sed
 ZONEDBFILE=$(echo "$ZONEFILEDIR/blocked.zone" | sed "s#\/#\\\/#g")
 # make the zone file
 # zone "$DOMAIN" { type master; file "/var/named/named.blocked.zone.db"; };
-sed "s/\(.*\)/zone \"\1\" { type master; file \"$ZONEDBFILE\"\; }\;/" "$TEMPDIR/$BLACKLISTZONEFILE" > "$OUTPUTDIR/$BLACKLISTZONEFILE"
+#sed "s/\(.*\)/zone \"\1\" { type master; file \"$ZONEDBFILE\"\; }\;/" "$TEMPDIR/$BLACKLISTFILE" > "$OUTPUTDIR/$BLACKLISTFILE"
+sed "s/\(.*\)/\1 CNAME \./" "$TEMPDIR/$BLACKLISTFILE" > "$OUTPUTDIR/$BLACKLISTFILE"
 
-
-echo "[+] Copying template zone file with sudo"
-sudo cp "./templates/blocked.zone" "$ZONEFILEDIR"
+echo "[+] Making zone file with sudo"
+#sudo cp "./templates/blocked.zone" "$ZONEFILEDIR"
+echo "zone \"rpz.blacklist\" { type master; file \"$ZONEFILEDIR/$BLACKLISTDBFILE\"\; }\;" | sudo tee "$ZONEFILEDIR/$BLACKLISTFILE"
 
 # copy files to bind9 location
 echo "[+] Copying blacklist zonefile"
-sudo mv -u $OUTPUTDIR/$BLACKLISTZONEFILE $ZONEFILEDIR/$BLACKLISTZONEFILE
+#sudo mv -u $OUTPUTDIR/$BLACKLISTFILE $ZONEFILEDIR/$BLACKLISTFILE
+cat ./templates/rpz.blacklist.zone $OUTPUTDIR/$BLACKLISTFILE | sudo tee $ZONEFILEDIR/$BLACKLISTDBFILE
 
 # cleanup
 echo "[+] Cleaning up temp files"

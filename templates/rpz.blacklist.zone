@@ -1,0 +1,10 @@
+$ORIGIN rpz.example.com.
+$TTL    300                 ; make it short
+@ 5M IN SOA     ky-rpz.blacklist. (
+    1  ; serial
+    28800       ; refresh
+    7200        ; retry
+    864000      ; expire
+    300         ; ttl
+    )
+      NS      localhost.
