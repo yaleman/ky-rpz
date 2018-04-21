@@ -44,10 +44,10 @@ fi
 
 # get list of domains from different sources
 echo "[+] Getting list of domains to blacklist"
-wget -O "$TEMPDIR/ads-list.list" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=;showintro=0&&mimetype=plaintext'
-wget -O "$TEMPDIR/mal-list.list" 'http://mirror1.malwaredomains.com/files/justdomains'
-wget -O "$TEMPDIR/ran-list.list" 'http://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt'
-wget -O "$TEMPDIR/webminer.list" 'https://raw.githubusercontent.com/greatis/Anti-WebMiner/master/blacklist.txt'
+wget -nv -O "$TEMPDIR/ads-list.list" 'http://pgl.yoyo.org/adservers/serverlist.php?hostformat=;showintro=0&&mimetype=plaintext'
+wget -nv -O "$TEMPDIR/mal-list.list" 'http://mirror1.malwaredomains.com/files/justdomains'
+wget -nv -O "$TEMPDIR/ran-list.list" 'http://ransomwaretracker.abuse.ch/downloads/RW_DOMBL.txt'
+wget -nv -O "$TEMPDIR/webminer.list" 'https://raw.githubusercontent.com/greatis/Anti-WebMiner/master/blacklist.txt'
 
 # compile into single unique list
 echo "[+] Cleaning up domains"
@@ -62,7 +62,8 @@ sudo cp -f "$TEMPDIR/$DBFILE" $SQUIDBLACKLIST
 
 echo "[+] Making zone config file with sudo"
 #sudo cp "./templates/blocked.zone" "$ZONEFILEDIR"
-echo "zone \"rpz.blacklist\" { type master; file \"$ZONEFILEDIR/$DBFILE\"; };" | sudo tee $ZONEFILEDIR/$NAMEDCONFIG > /dev/null
+echo "zone \"rpz.blacklist\" { type master; file \"$ZONEFILEDIR/$DBFILE\"; };" > $OUTPUTDIR/$NAMEDCONFIG
+sudo mv $OUTPUTDIR/$NAMEDCONFIG $ZONEFILEDIR/$NAMEDCONFIG
 
 echo "[+] Creating blacklist zone file"
 # make the zone file
@@ -73,7 +74,7 @@ sed "s/\(.*\)/\1 CNAME \./" "$TEMPDIR/$DBFILE" > "$OUTPUTDIR/$DBFILE"
 # copy files to bind9 location
 echo "[+] Copying blacklist zonefile"
 #sudo mv -u $OUTPUTDIR/$BLACKLISTFILE $ZONEFILEDIR/$BLACKLISTFILE
-        cat "./templates/db.ky-rpz" "$OUTPUTDIR/$DBFILE" | sudo tee $ZONEFILEDIR/$DBFILE
+        cat "./templates/db.ky-rpz" "$OUTPUTDIR/$DBFILE" | sudo tee $ZONEFILEDIR/$DBFILE > /dev/null
 
 # cleanup
 echo "[+] Cleaning up temp files"
