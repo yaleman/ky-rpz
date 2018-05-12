@@ -8,4 +8,4 @@ $TTL    300                 ; make it short
     300         ; ttl
     )
 
-NS      localhost.
+IN NS      localhost.
