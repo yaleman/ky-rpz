@@ -85,6 +85,6 @@ echo "[+] Copying blacklist zonefile"
 
 # cleanup
 echo "[+] Cleaning up temp files"
-rm $TEMPDIR/*
+#rm $TEMPDIR/*
 
 echo Done!
