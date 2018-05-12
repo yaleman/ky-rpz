@@ -47,7 +47,7 @@ echo "[+] Getting list of domains to blacklist"
 
 #TODO: parse this: https://urlhaus.abuse.ch/downloads/rpz/
 
-wget -nv -O "$TEMPDIR/yoyo.list" "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=plain;showintro=0"
+wget -nv -O "$TEMPDIR/yoyo.list" "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=nohtml&showintro=0&mimetype=plaintext"
 
 wget -nv -O "$TEMPDIR/mal-list.list" 'http://mirror1.malwaredomains.com/files/justdomains'
 
