@@ -1,0 +1,14 @@
+INSTALLDIR="/opt/ky-rpz/"
+TEMPDIR="./tmp"
+
+OUTPUTDIR="./output"
+
+ZONEFILEDIR="/etc/bind/"
+
+NAMEDCONFIG="named.conf.ky-rpz"
+DBFILE="db.ky-rpz"
+
+SQUIDBLACKLIST="/etc/squid/ky-rpz.acl"
+
+# a semi-colon delimited list of forwarders, eg: 
+

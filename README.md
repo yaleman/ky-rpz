@@ -17,6 +17,7 @@ An example configuration file is in `ky-rpz.config.example`. Copy this to `ky-rp
 | NAMEDCONFIG | The named.config filename you want to use (and add to BIND config) | `named.conf.ky-rpz` |
 | DBFILE | The name of the zone file (in case of collisions) | `db.ky-rpz`
 | SQUIDBLACKLIST | The location of a squid blacklist. If you don't use squid, set it to /dev/null | `/etc/squid/ky-rpz.acl` |
+| FORWARDERS | A semicolon-delimited list of upstream forwarders to connect to, eg "192.168.2.1;8.8.8.8" | "" (disabled) |
 
 
 ## BIND Configuration
@@ -45,6 +46,18 @@ http_access allow localhost
 # And finally deny all other access to this proxy
 http_access deny all
 ```
+
+# Docker Image
+
+## Building the image (necessary if you want custom options or upstream forwarders 
+
+Set your configuration variables in conf/ky-rpz.config.docker and run `build.sh`.
+
+## Running it
+
+To spin up a new instance: `docker run --name "ky-rpz" -p 53:53/udp -p 53:53 --rm yaleman/ky-rpz`
+
+To force an update of the definitions (should happen hourly in cron): `docker exec -it ky-rpz /opt/ky-rpz/bin/update.sh`
 
 # TODO
 

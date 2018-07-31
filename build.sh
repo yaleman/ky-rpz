@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build --tag yaleman/ky-rpz --no-cache .
+docker build --tag yaleman/ky-rpz .

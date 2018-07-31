@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [ ! -f "ky-rpz.config" ]; then
+if [ ! -f "conf/ky-rpz.config" ]; then
         echo "Couldn't find config file (ky-rpz.config)"
         exit 
 else
-        source "./ky-rpz.config"
+        source "./conf/ky-rpz.config"
 fi
 # main script
 
@@ -20,6 +20,13 @@ fi
 if [ ! -d "$ZONEFILEDIR" ]; then
         echo "Zone file dir ($ZONEFILEDIR) doesn't exist, quitting"
         exit
+fi
+
+if [ ! -z $FORWARDERS ]; then
+        echo "[+] updating forwarder config"
+        sed  "s@//#FORWARDERS#@forwarders { $FORWARDERS; };@" $INSTALLDIR/conf/named.conf.options.example | sed 's/;;/;/g' > $INSTALLDIR/conf/named.conf.options
+else   
+        echo "[+] no forwarders specified, using root hints"
 fi
 
 # make sure base directories are here
@@ -81,7 +88,7 @@ sed "s/\(.*\)/\1 CNAME \./" "$TEMPDIR/$DBFILE" > "$OUTPUTDIR/$DBFILE"
 # copy files to bind9 location
 echo "[+] Copying blacklist zonefile"
 #sudo mv -u $OUTPUTDIR/$BLACKLISTFILE $ZONEFILEDIR/$BLACKLISTFILE
-        cat "./templates/db.ky-rpz" "$OUTPUTDIR/$DBFILE" | sudo tee $ZONEFILEDIR/$DBFILE > /dev/null
+        cat "$INSTALLDIR/templates/db.ky-rpz" "$OUTPUTDIR/$DBFILE" | sudo tee $ZONEFILEDIR/$DBFILE > /dev/null
 
 # cleanup
 echo "[+] Cleaning up temp files"
