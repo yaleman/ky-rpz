@@ -6,7 +6,7 @@ options {
 	// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
 
 
-	forwarders { 192.168.73.1; };
+	//#FORWARDERS#
 
 	//========================================================================
 	// If BIND logs error messages about the root key being expired,
@@ -15,7 +15,7 @@ options {
 	dnssec-validation auto;
 	
 	// allow recursive queries
-	// recursion yes;
+	recursion yes;
 	
 	auth-nxdomain no;    # conform to RFC1035
 	
