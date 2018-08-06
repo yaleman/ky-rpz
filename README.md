@@ -26,12 +26,28 @@ You'll need to enable the `response-policy` option in BIND. This requires versio
 
 Make sure you add the blacklist zone file to your config. For example, I added `include "/etc/bind/named.conf.ky-rpz";` to `/etc/bind/named.conf.local` on a Debian machine.
 
+# Docker Image
+
+## Building the image (necessary if you want custom options or upstream forwarders 
+
+Set your configuration variables in `conf/env.env` (an example is in `conf/env.env.example`) and run `build.sh`.
+
+## Setting custom forwarders
+
+Put an entry in `conf/env.env`
+
+
+## Running it
+
+To spin up a new instance: `docker run --name "ky-rpz" -p 53:53/udp -p 53:53 --rm yaleman/ky-rpz`
+
+To force an update of the definitions (should happen hourly in cron): `docker exec -it ky-rpz /opt/ky-rpz/bin/update.sh`
+
 ## Squid blocking
 
 Below is a section of the default configuration file from Ubuntu's squid package (`/etc/squid/squid.conf`). We've added the kyrpz block to the top, just below the "INSERT YOUR OWN RULES" section. Do this yourself, and it'll do the needful.
 
 ```
-
 #
 # INSERT YOUR OWN RULE(S) HERE TO ALLOW ACCESS FROM YOUR CLIENTS
 #
@@ -46,18 +62,6 @@ http_access allow localhost
 # And finally deny all other access to this proxy
 http_access deny all
 ```
-
-# Docker Image
-
-## Building the image (necessary if you want custom options or upstream forwarders 
-
-Set your configuration variables in conf/ky-rpz.config.docker and run `build.sh`.
-
-## Running it
-
-To spin up a new instance: `docker run --name "ky-rpz" -p 53:53/udp -p 53:53 --rm yaleman/ky-rpz`
-
-To force an update of the definitions (should happen hourly in cron): `docker exec -it ky-rpz /opt/ky-rpz/bin/update.sh`
 
 # TODO
 

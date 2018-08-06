@@ -8,3 +8,5 @@ services:
     ports:
       - "53:53"
       - "53:53/udp"
+    env_file:
+      - ./conf/env.env
