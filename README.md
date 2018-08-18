@@ -19,7 +19,6 @@ An example configuration file is in `ky-rpz.config.example`. Copy this to `ky-rp
 | SQUIDBLACKLIST | The location of a squid blacklist. If you don't use squid, set it to /dev/null | `/etc/squid/ky-rpz.acl` |
 | FORWARDERS | A semicolon-delimited list of upstream forwarders to connect to, eg "192.168.2.1;8.8.8.8" | "" (disabled) |
 
-
 ## BIND Configuration
 
 You'll need to enable the `response-policy` option in BIND. This requires version 9.9 and above. Add this line to `/etc/bind/named.conf.options` inside the existing squiggly braces: `response-policy { zone "rpz.blacklist"; };`
