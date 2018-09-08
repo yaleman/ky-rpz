@@ -9,6 +9,11 @@ fi
 # main script
 
 # check variables in case of user
+if [ -z "$INSTALLDIR" ]; then
+        echo "Installdir isn't set or is empty, please set \$INSTALLDIR in config"
+        exit
+fi
+
 if [ -z "$TEMPDIR" ]; then
         echo "Tempdir not set or is empty, quitting."
         exit
@@ -17,6 +22,12 @@ if [ -z "$OUTPUTDIR" ]; then
         echo "Outputdir not set or is empty, quitting."
         exit
 fi
+
+if [ ! -d "$INSTALLDIR" ]; then
+        echo "Configured installation directory ($INSTALLDIR) is probably wrong because I can't find it."
+        exit
+fi
+
 if [ ! -d "$ZONEFILEDIR" ]; then
         echo "Zone file dir ($ZONEFILEDIR) doesn't exist, quitting"
         exit
