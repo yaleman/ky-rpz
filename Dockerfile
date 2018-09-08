@@ -31,7 +31,7 @@ RUN ln -s /opt/ky-rpz/conf/ky-rpz.config.docker /opt/ky-rpz/conf/ky-rpz.config
 RUN rm /etc/bind/named.conf.local
 RUN rm /etc/bind/named.conf.options
 RUN ln -s /opt/ky-rpz/conf/named.conf.local /etc/bind/named.conf.local
-RUN ln -s /opt/ky-rpz/conf/named.conf.options /etc/bind/named.conf.options
+RUN ln -s /opt/ky-rpz/conf/named.conf.options.example /etc/bind/named.conf.options
 
 # cron's important
 RUN ln -s /opt/ky-rpz/bin/update.sh /etc/cron.hourly/ky-rpz
